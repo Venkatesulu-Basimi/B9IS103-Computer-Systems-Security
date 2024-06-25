@@ -15,11 +15,11 @@
                 socket.emit('join', {username: "{{ username }}", room: room});
             });
 
-            socket.on('message', function(data) {
-                var messageItem = document.createElement('li');
-                messageItem.className = 'list-group-item';
-                messageItem.inerHTML = '<strong>' + data.usernname + ':</strong> ' + data.msg;
-                messageList.appendChild(messageItem);
+            socket.on('status', function(data) {
+                var messageItem = document.getElementById('messages');
+                statusItem.className = 'list-group-item';
+                statusItem.inerHTML = '<strong>' + data.usernname + ':</strong> ' + data.msg;
+                statusItem.appendChild(messageItem);
             });
 
             function sendMessage() {
