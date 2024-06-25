@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"></html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>SecureChat - Chat</title>
@@ -71,3 +71,18 @@
         }
     </style>
 </head>
+<body>
+    {% include 'includes/navbar.html' %}
+    <div class="container mt-5" id="chat-container">
+        <h1>SecureChat Room: {{ room1 }}</h1>
+        <ul id="messages" class="list-group"></ul>
+        <div id="input-container" class="input-group">
+            <input type="text" id="message" class="form-control" placeholder="Enter your message">
+            <div class="input-group-append">
+                <button id="sendButton" class="btn btn-primary">Send</button>
+            </div>
+        </div>
+    </div>
+    {% include 'includes/footer.html' %}
+</body>
+</html>
