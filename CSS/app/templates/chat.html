@@ -39,5 +39,35 @@
                 });
 
     </script>
+    <style>
+        #chat-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 460px); /* Adjusted for header and footer */
+            max-width: 800px;
+            margin: auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
 
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #f1f1f1;
+        }
+
+        #input-container {
+            display: flex;
+        }
+
+        #message {
+            flex: 1;
+        }
+    </style>
 </head>
