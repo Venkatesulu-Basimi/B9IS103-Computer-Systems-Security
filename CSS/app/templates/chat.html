@@ -16,8 +16,16 @@
             });
 
             socket.on('status', function(data) {
-                var messageItem = document.getElementById('messages');
+                var messageList = document.getElementById('messages');
                 var statusItem = document.createElement('li');
+                statusItem.className = 'list-group-item list-group-item-info';
+                statusItem.textContent = data.msg;
+                messageList.appendChild(statusItem);
+            });
+
+            socket.on('message', function(data) {
+                var messageItem = document.getElementById('messages');
+                var messageItem = document.createElement('li');
                 messageItem.className = 'list-group-item';
                 messageItem.inerHTML = '<strong>' + data.usernname + ':</strong> ' + data.msg;
                 messageList.appendChild(messageItem);
