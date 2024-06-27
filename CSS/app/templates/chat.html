@@ -17,6 +17,7 @@
 
             socket.on('status', function(data) {
                 var messageItem = document.getElementById('messages');
+                var statusItem = document.createElement('li');
                 statusItem.className = 'list-group-item';
                 statusItem.inerHTML = '<strong>' + data.usernname + ':</strong> ' + data.msg;
                 statusItem.appendChild(messageItem);
@@ -32,7 +33,9 @@
                 document.getElementById('sendButton').onclick = sendMessage;
             }
 
-            document.getElementById('sendButton')
+            document.getElementById('sendButton').onclick = sendMessage;
+
+
                 document.getElementById('message').addEventListener('keypress', function(event) {
                 if (event.key === 'Enter') {
                     event.preventDefault();
