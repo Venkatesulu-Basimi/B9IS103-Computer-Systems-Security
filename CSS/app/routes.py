@@ -32,3 +32,8 @@ def chat():
                 })
             except Exception as e:
     return redirect(url_for('main.index'))
+
+@main.route('/rooms')
+def get_rooms():
+    rooms = Room.get_latest_rooms()
+    return jsonify([room['name'] for room in rooms])
