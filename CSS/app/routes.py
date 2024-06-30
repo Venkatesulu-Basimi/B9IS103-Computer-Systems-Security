@@ -37,3 +37,9 @@ def chat():
 def get_rooms():
     rooms = Room.get_latest_rooms()
     return jsonify([room['name'] for room in rooms])
+
+@main.route('/create_room', methods=['POST'])
+def create_room():
+    room_name = request.json.get('room_name')
+    Room.create_room(room_name)
+    return jsonify({'status': 'Room created'})
