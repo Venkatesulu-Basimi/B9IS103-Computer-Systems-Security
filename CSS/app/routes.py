@@ -28,6 +28,12 @@ def login():
         if not check_password_hash(user['password'], password):
             flash('Incorrect password')
             return render_template('login.html')
+        session['username'] = username
+        session['is_admin'] = user.get('is_admin', False)
+        if session['is_admin']:
+            return redirect(url_for('main.admin_dashboard'))
+        return redirect(url_for('main.dashboard'))
+    return render_template('login.html')
 =======
 
 @main.route('/chat')
