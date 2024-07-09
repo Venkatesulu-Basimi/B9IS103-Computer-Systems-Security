@@ -25,6 +25,9 @@ def login():
         if not user:
             flash('User not found')
             return render_template('login.html')
+        if not check_password_hash(user['password'], password):
+            flash('Incorrect password')
+            return render_template('login.html')
 =======
 
 @main.route('/chat')
