@@ -15,6 +15,26 @@ def index():
         return redirect(url_for('main.dashboard'))
     return redirect(url_for('main.login'))
 
+<<<<<<< HEAD
+@main.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.get_user(username)
+        if not user:
+            flash('User not found')
+            return render_template('login.html')
+        if not check_password_hash(user['password'], password):
+            flash('Incorrect password')
+            return render_template('login.html')
+        session['username'] = username
+        session['is_admin'] = user.get('is_admin', False)
+        if session['is_admin']:
+            return redirect(url_for('main.admin_dashboard'))
+        return redirect(url_for('main.dashboard'))
+    return render_template('login.html')
+=======
 
 @main.route('/chat')
 def chat():
@@ -43,8 +63,68 @@ def create_room():
     room_name = request.json.get('room_name')
     Room.create_room(room_name)
     return jsonify({'status': 'Room created'})
+<<<<<<< HEAD
 
 @main.route('/logout')
 def logout():
     session.pop('username', None)
     return redirect(url_for('main.index'))
+=======
+>>>>>>> 9e2d5a5c8452bcaf5498554b2c6b053e8e779154
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@main.route('/admin')
+def admin_dashboard():
+    if 'is_admin' in session and session['is_admin']:
+        users = User.get_all_users()
+        users = [user for user in users if not user.get('is_admin')]
+        rooms = Room.get_all_rooms()
+        return render_template('admin_dashboard.html', users=users, rooms=rooms)
+    flash('Access denied.')
+    return redirect(url_for('main.index'))
+
+>>>>>>> 30fb98cad06ee4d4d43994b86364ac46eed4bf9f
