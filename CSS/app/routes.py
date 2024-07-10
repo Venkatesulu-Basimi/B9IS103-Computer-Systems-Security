@@ -63,6 +63,13 @@ def create_room():
     room_name = request.json.get('room_name')
     Room.create_room(room_name)
     return jsonify({'status': 'Room created'})
+<<<<<<< HEAD
+
+@main.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('main.index'))
+=======
 >>>>>>> 9e2d5a5c8452bcaf5498554b2c6b053e8e779154
 
 
@@ -117,14 +124,6 @@ def admin_dashboard():
         users = [user for user in users if not user.get('is_admin')]
         rooms = Room.get_all_rooms()
         return render_template('admin_dashboard.html', users=users, rooms=rooms)
-    flash('Access denied.')
-    return redirect(url_for('main.index'))
-
-@main.route('/admin/delete_user/<username>', methods=['POST'])
-def delete_user(username):
-    if 'is_admin' in session and session['is_admin']:
-        User.delete_user(username)
-        return redirect(url_for('main.admin_dashboard'))
     flash('Access denied.')
     return redirect(url_for('main.index'))
 
