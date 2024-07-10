@@ -65,3 +65,58 @@ def create_room():
     return jsonify({'status': 'Room created'})
 >>>>>>> 9e2d5a5c8452bcaf5498554b2c6b053e8e779154
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@main.route('/admin')
+def admin_dashboard():
+    if 'is_admin' in session and session['is_admin']:
+        users = User.get_all_users()
+        users = [user for user in users if not user.get('is_admin')]
+        rooms = Room.get_all_rooms()
+        return render_template('admin_dashboard.html', users=users, rooms=rooms)
+    flash('Access denied.')
+    return redirect(url_for('main.index'))
+
