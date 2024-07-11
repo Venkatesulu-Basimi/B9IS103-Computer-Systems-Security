@@ -5,8 +5,15 @@
     <title>SecureChat - Register</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .container {
+            max-width: 400px;
+            margin-top: 100px;
+        }
+    </style>
 </head>
 <body>
+    {% include 'includes/navbar.html' %}
     <div class="container">
         <div class="card">
             <div class="card-header">
@@ -45,5 +52,6 @@
             </div>
         </div>
     </div>
+    {% include 'includes/footer.html' %}
 </body>
 </html>
