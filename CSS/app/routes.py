@@ -69,51 +69,6 @@ def create_room():
 def logout():
     session.pop('username', None)
     return redirect(url_for('main.index'))
-=======
->>>>>>> 9e2d5a5c8452bcaf5498554b2c6b053e8e779154
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
