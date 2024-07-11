@@ -82,3 +82,10 @@ def admin_dashboard():
     flash('Access denied.')
     return redirect(url_for('main.index'))
 
+@main.route('/admin/delete_user/<username>', methods=['POST'])
+def delete_user(username):
+    if 'is_admin' in session and session['is_admin']:
+        User.delete_user(username)
+        return redirect(url_for('main.admin_dashboard'))
+    flash('Access denied.')
+    return redirect(url_for('main.index'))
