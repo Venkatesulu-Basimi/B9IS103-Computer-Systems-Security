@@ -1,0 +1,10 @@
+Flask
+Flask-PyMongo
+Flask-Login
+python-dotenv
+bson
+Flask-Mail
+Flask-SocketIO
+cryptography
+werkzeug
+pymongo
