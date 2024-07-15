@@ -1,5 +1,7 @@
 from flask import Blueprint, request, render_template, redirect, url_for, session, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_mail import Message
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from .models import User, Room, Message as ChatMessage
 from . import mail, mongo
 
@@ -7,6 +9,8 @@ import os
 import logging
 import re
 
+main = Blueprint('main', __name__)
+s = URLSafeTimedSerializer(os.getenv('SECRET_KEY'))
 
 @main.route('/')
 def index():
@@ -16,7 +20,7 @@ def index():
         return redirect(url_for('main.dashboard'))
     return redirect(url_for('main.login'))
 
-<<<<<<< HEAD
+
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -35,7 +39,6 @@ def login():
             return redirect(url_for('main.admin_dashboard'))
         return redirect(url_for('main.dashboard'))
     return render_template('login.html')
-=======
 
 @main.route('/chat')
 def chat():
@@ -87,6 +90,14 @@ def admin_dashboard():
 def delete_user(username):
     if 'is_admin' in session and session['is_admin']:
         User.delete_user(username)
+        return redirect(url_for('main.admin_dashboard'))
+    flash('Access denied.')
+    return redirect(url_for('main.index'))
+
+@main.route('/admin/delete_room/<name>', methods=['POST'])
+def delete_room(name):
+    if 'is_admin' in session and session['is_admin']:
+        Room.delete_room(name)
         return redirect(url_for('main.admin_dashboard'))
     flash('Access denied.')
     return redirect(url_for('main.index'))
