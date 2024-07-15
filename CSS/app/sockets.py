@@ -25,7 +25,7 @@ def init_sockets(socketio):
         
         try:
             # Get recipient's public key
-            recipient_user = User.get_user(username)
+           recipient_user = User.get_user(username)
             encrypted_message = Message.encrypt_message(recipient_user['public_key'], message)
             Message.save_message(username, room, encrypted_message)
             emit('message', {'username': username, 'msg': message}, room=room)
