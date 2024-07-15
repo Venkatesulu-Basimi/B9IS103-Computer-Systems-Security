@@ -1,6 +1,7 @@
 from flask import Blueprint, request, render_template, redirect, url_for, session, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from .models import User, Room, Message as ChatMessage
+from . import mail, mongo
 
 import os
 import logging
