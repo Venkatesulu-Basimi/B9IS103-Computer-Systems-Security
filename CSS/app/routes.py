@@ -40,6 +40,37 @@ def login():
         return redirect(url_for('main.dashboard'))
     return render_template('login.html')
 
+@main.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+
+        if password != confirm_password:
+            flash('Passwords do not match!')
+            return render_template('register.html')
+
+        if User.get_user(username):
+            flash('Username already exists!')
+            return render_template('register.html')
+
+        if User.get_user_by_email(email):
+            flash('Email already registered!')
+            return render_template('register.html')
+
+        User.create_user(username, email, password)
+        
+        token = s.dumps(email, salt='email-confirm')
+        link = url_for('main.confirm_email', token=token, _external=True)
+        msg_body = f'Your link is {link}'
+        msg = Message(subject='Confirm Email', recipients=[email], body=msg_body, sender=os.getenv('MAIL_USERNAME'))
+        mail.send(msg)
+        
+        return f'An email has been sent to {email}. Please confirm your email address to complete the registration.'
+    return render_template('register.html')
+    
 @main.route('/chat')
 def chat():
     room = request.args.get('room')
