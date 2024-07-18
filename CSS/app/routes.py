@@ -48,6 +48,10 @@ def register():
         password = request.form['password']
         confirm_password = request.form['confirm_password']
 
+        if not re.match(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$', password):
+            flash('Password must be at least 8 characters long and contain both letters and numbers')
+            return render_template('register.html')
+
         if password != confirm_password:
             flash('Passwords do not match!')
             return render_template('register.html')
@@ -60,7 +64,8 @@ def register():
             flash('Email already registered!')
             return render_template('register.html')
 
-        User.create_user(username, email, password)
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+        User.create_user(username, email, hashed_password)
         
         token = s.dumps(email, salt='email-confirm')
         link = url_for('main.confirm_email', token=token, _external=True)
