@@ -20,7 +20,6 @@ def index():
         return redirect(url_for('main.dashboard'))
     return redirect(url_for('main.login'))
 
-
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
