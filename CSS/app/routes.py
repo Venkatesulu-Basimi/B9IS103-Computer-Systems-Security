@@ -103,11 +103,12 @@ def create_room():
     room_name = request.json.get('room_name')
     Room.create_room(room_name)
     return jsonify({'status': 'Room created'})
-<<<<<<< HEAD
+
 
 @main.route('/logout')
 def logout():
     session.pop('username', None)
+    session.pop('is_admin', None)
     return redirect(url_for('main.index'))
 
 
