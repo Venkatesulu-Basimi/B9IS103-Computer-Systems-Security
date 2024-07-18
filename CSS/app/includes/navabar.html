@@ -1,0 +1,27 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{{ url_for('main.dashboard') }}">Home</a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ml-auto">
+            {% if session['username'] %}
+                {% if session['is_admin'] %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.admin_dashboard') }}">Admin Dashboard</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <span class="navbar-text mr-3">Logged in as {{ session['username'] }}</span>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-success" href="{{ url_for('main.logout') }}">Logout</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="btn btn-primary" href="{{ url_for('main.login') }}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-primary ml-2" href="{{ url_for('main.register') }}">Register</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
