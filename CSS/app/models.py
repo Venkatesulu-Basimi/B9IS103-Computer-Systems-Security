@@ -2,9 +2,12 @@ from . import mongo
 from datetime import datetime
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives import hashes
 import base64
 from werkzeug.security import generate_password_hash
 
+    
 class Room:
     @classmethod
     def get_latest_rooms(cls):
@@ -17,7 +20,7 @@ class Room:
             'created_at': datetime.utcnow()
         }
     
-    mongo.rooms.insert_one(room)
+        mongo.rooms.insert_one(room)
         return room
 
     @classmethod
@@ -34,11 +37,17 @@ class Message:
     def save(cls, username, room, text):
         message = {
             'username': username,
+            'email': email,
             'room': room,
+            'password': password,
             'message': text,
             'timestamp': datetime.utcnow()
         }
         mongo.messages.insert_one(message)
         return message
     
+    @classmethod
+    def delete_messages_in_room(cls, room):
+        return mongo.messages.delete_many({'room': room})
+
    return base64.b64encode(encrypted_message).decode('utf-8')
