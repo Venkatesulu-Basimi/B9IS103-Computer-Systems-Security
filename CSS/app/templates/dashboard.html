@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SecureChat - Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.getElementById('createRoomButton').onclick = function() {
+                var roomName = document.getElementById('roomName').value;
+                if (roomName) {
+                    fetch('/create_room', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({room_name: roomName})
+                    }).then(response => response.json())
+                      .then(data => {
+                          window.location.href = '/chat?room=' + roomName;
+                      });
+                }
+            };
+
+            fetch('/rooms')
+                .then(response => response.json())
+                .then(rooms => {
+                    var roomList = document.getElementById('roomList');
+                    rooms.forEach(room => {
+                        var listItem = document.createElement('li');
+                        listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+                        listItem.textContent = room;
+
+                        var joinButton = document.createElement('button');
+                        joinButton.className = 'btn btn-primary btn-sm';
+                        joinButton.textContent = 'Join';
+                        joinButton.onclick = function() {
+                            window.location.href = '/chat?room=' + room;
+                        };
+
+                        listItem.appendChild(joinButton);
+                        roomList.appendChild(listItem);
+                    });
+                });
+        });
+    </script>
+    <style>
+        .container {
+            margin-top: 20px;
+        }
+
+        .card {
+            margin-top: 20px;
+        }
+
+        #createRoomCard {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    {% include 'includes/navbar.html' %}
+    <div class="container">
+        <div class="card" id="createRoomCard">
+            <div class="card-header">
+                <h2>Create a Room</h2>
+            </div>
+            <div class="card-body">
+                <div class="input-group">
+                    <input type="text" id="roomName" class="form-control" placeholder="Enter room name">
+                    <div class="input-group-append">
+                        <button id="createRoomButton" class="btn btn-primary">Create Room</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h2>Available Rooms</h2>
+            </div>
+            <div class="card-body">
+                <ul id="roomList" class="list-group">
+                    <!-- Room items will be inserted here by JavaScript -->
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% include 'includes/footer.html' %}
+</body>
+</html>
