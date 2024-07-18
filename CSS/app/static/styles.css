@@ -46,3 +46,21 @@ body {
     text-align: center;
     padding: 20px 0;
 }
+
+#chat-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+#messages {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f1f1f1;
+}
+
+#input-container {
+    margin-top: 10px;
+}

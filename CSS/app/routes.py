@@ -75,6 +75,12 @@ def register():
         return f'An email has been sent to {email}. Please confirm your email address to complete the registration.'
     return render_template('register.html')
     
+@main.route('/dashboard')
+def dashboard():
+    if 'username' in session:
+        latest_rooms = Room.get_latest_rooms()
+        return render_template('dashboard.html', username=session['username'], rooms=latest_rooms, is_admin=session.get('is_admin', False))
+    return redirect(url_for('main.index'))
 @main.route('/chat')
 def chat():
     room = request.args.get('room')
