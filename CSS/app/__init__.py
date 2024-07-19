@@ -1,9 +1,13 @@
+from flask import Flask
+from flask_socketio import SocketIO
 from flask_mail import Mail
 from pymongo import MongoClient
 from dotenv import load_dotenv
+
 import os
 from werkzeug.security import generate_password_hash
 
+load_dotenv()
 
 create_app():
     app = Flask(__name__)
