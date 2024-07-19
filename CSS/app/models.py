@@ -49,5 +49,17 @@ class Message:
     @classmethod
     def delete_messages_in_room(cls, room):
         return mongo.messages.delete_many({'room': room})
+    
+     @classmethod
+    def encrypt_message(cls, public_key_pem, message):
+        public_key = serialization.load_pem_public_key(public_key_pem.encode('utf-8'))
+        encrypted_message = public_key.encrypt(
+            message.encode('utf-8'),
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None
+            )
+        )
 
    return base64.b64encode(encrypted_message).decode('utf-8')

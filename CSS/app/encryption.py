@@ -10,6 +10,16 @@ def generate_keys():
 
     private_key_pem = private_key.private_bytes(
         encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.TraditionalOpenSSL,
+        encryption_algorithm=serialization.NoEncryption()
     )
+    public_key_pem = public_key.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
+    )
+    return public_key_pem.decode('utf-8'), private_key_pem.decode('utf-8')
+
+
+
 
     return public_key_pem.decode('utf-8'), private_key_pem.decode('utf-8')
