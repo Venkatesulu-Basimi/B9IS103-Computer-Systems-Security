@@ -8,11 +8,7 @@ from werkzeug.security import generate_password_hash
 
 load_dotenv()
 
-socketio = SocketIO()
-mail = Mail()
-mongo = None
-
-def create_app():
+create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
     app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
