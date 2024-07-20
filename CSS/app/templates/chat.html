@@ -24,10 +24,10 @@
             });
 
             socket.on('message', function(data) {
-                var messageItem = document.getElementById('messages');
+                var messageList = document.getElementById('messages');
                 var messageItem = document.createElement('li');
                 messageItem.className = 'list-group-item';
-                messageItem.inerHTML = '<strong>' + data.usernname + ':</strong> ' + data.msg;
+                messageItem.innerHTML = '<strong>' + data.username + ':</strong> ' + data.msg;
                 messageList.appendChild(messageItem);
             });
 
@@ -36,19 +36,20 @@
                 socket.emit('message', {
                     username: "{{ username }}",
                     msg: message,
-                    room:room
+                    room: room
                 });
-                document.getElementById('message').onclick = sendMessage;
+                document.getElementById('message').value = '';
             }
 
-                document.getElementById('message').addEventListener('keypress', function(event) {
+            document.getElementById('sendButton').onclick = sendMessage;
+
+            document.getElementById('message').addEventListener('keypress', function(event) {
                 if (event.key === 'Enter') {
                     event.preventDefault();
                     sendMessage();
                 }
             });
         });
-
     </script>
     <style>
         #chat-container {
@@ -80,12 +81,17 @@
         #message {
             flex: 1;
         }
+
+        .container {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     {% include 'includes/navbar.html' %}
     <div class="container mt-5" id="chat-container">
-        <h1>SecureChat Room: {{ room1 }}</h1>
+        <h1>SecureChat Room: {{ room }}</h1>
         <ul id="messages" class="list-group"></ul>
         <div id="input-container" class="input-group">
             <input type="text" id="message" class="form-control" placeholder="Enter your message">

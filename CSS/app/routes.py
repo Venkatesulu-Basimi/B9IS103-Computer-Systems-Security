@@ -74,6 +74,18 @@ def register():
         
         return f'An email has been sent to {email}. Please confirm your email address to complete the registration.'
     return render_template('register.html')
+
+@main.route('/confirm_email/<token>')
+def confirm_email(token):
+    try:
+        email = s.loads(token, salt='email-confirm', max_age=3600)
+    except SignatureExpired:
+        return '<h1>The token is expired!</h1>'
+    
+    user = User.get_user_by_email(email)
+    if user:
+        mongo.users.update_one({'email': email}, {'$set': {'confirmed': True}})
+    return render_template('email_confirmation.html', login_url=url_for('main.login'))
     
 @main.route('/chat')
 def chat():
@@ -90,6 +102,9 @@ def chat():
                     'timestamp': msg['timestamp']
                 })
             except Exception as e:
+                logging.error("")
+                flash('')
+        return render_template('chat.html', username=session['username'], room=room, messages=decrypted_messages)
     return redirect(url_for('main.index'))
 
 @main.route('/rooms')
@@ -106,9 +121,8 @@ def create_room():
 @main.route('/logout')
 def logout():
     session.pop('username', None)
+    session.pop('is_admin', None)
     return redirect(url_for('main.index'))
-
-
 
 @main.route('/admin')
 def admin_dashboard():
