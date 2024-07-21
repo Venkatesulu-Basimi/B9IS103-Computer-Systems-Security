@@ -86,6 +86,13 @@ def confirm_email(token):
     if user:
         mongo.users.update_one({'email': email}, {'$set': {'confirmed': True}})
     return render_template('email_confirmation.html', login_url=url_for('main.login'))
+
+@main.route('/dashboard')
+def dashboard():
+    if 'username' in session:
+        latest_rooms = Room.get_latest_rooms()
+        return render_template('dashboard.html', username=session['username'], rooms=latest_rooms, is_admin=session.get('is_admin', False))
+    return redirect(url_for('main.index'))
     
 @main.route('/chat')
 def chat():
