@@ -21,12 +21,12 @@
             </div>
             <div class="card-body">
                 {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <div class="alert alert-danger" role="alert">
-                        {{ messages[0] }}
-                    </div>
-                {% endif %}
-            {% endwith %}
+                    {% if messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ messages[0] }}
+                        </div>
+                    {% endif %}
+                {% endwith %}
                 <form method="post" action="{{ url_for('main.register') }}">
                     <div class="form-group">
                         <label for="username">Username</label>

@@ -32,5 +32,3 @@ def init_sockets(socketio):
         except Exception as e:
             logging.error(f"Encryption failed: {str(e)}")
             emit('status', {'msg': 'Encryption failed. Message not sent.'}, room=room)
-
-    
