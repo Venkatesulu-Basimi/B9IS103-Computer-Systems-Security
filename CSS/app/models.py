@@ -34,11 +34,13 @@ class User:
             format=serialization.PublicFormat.SubjectPublicKeyInfo
         ).decode('utf-8')
 
-        # Store the plain password in this example
+        # Hash the password before storing it
+        hashed_password = generate_password_hash(password)
+
         user = {
             'username': username,
             'email': email,
-            'password': password,  # Plain text password
+            'password': hashed_password,  # Hashed password
             'confirmed': False,
             'public_key': public_pem,
             'is_admin': is_admin

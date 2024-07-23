@@ -30,7 +30,6 @@ def login():
 
         # Log input values for debugging
         current_app.logger.debug(f"Attempting login for username: {username}")
-        current_app.logger.debug(f"Input password: {password}")
 
         # Retrieve the user from the database
         user = User.get_user(username)
@@ -39,12 +38,8 @@ def login():
             flash('User not found')
             return render_template('login.html')
         
-        # Log stored password for debugging
-        stored_password = user.get('password')
-        current_app.logger.debug(f"Stored password: {stored_password}")
-
-        # Verify the password (plain text comparison)
-        if stored_password != password:
+        # Verify the hashed password
+        if not check_password_hash(user['password'], password):
             flash('Incorrect password')
             return render_template('login.html')
 
@@ -90,7 +85,7 @@ def register():
             flash('Email already registered!')
             return render_template('register.html')
 
-        # Create the user with plain text password
+        # Create the user with hashed password
         User.create_user(username, email, password)
 
         # Generate email confirmation link
