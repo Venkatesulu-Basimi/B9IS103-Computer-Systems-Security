@@ -43,6 +43,52 @@
                         roomList.appendChild(listItem);
                     });
                 });
+
+            fetch('/user_rooms')
+                .then(response => response.json())
+                .then(rooms => {
+                    var userRoomList = document.getElementById('userRoomList');
+                    rooms.forEach(room => {
+                        var listItem = document.createElement('li');
+                        listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+                        listItem.textContent = room;
+
+                        var joinButton = document.createElement('button');
+                        joinButton.className = 'btn btn-primary btn-sm';
+                        joinButton.textContent = 'Join';
+                        joinButton.onclick = function() {
+                            window.location.href = '/chat?room=' + room;
+                        };
+
+                        listItem.appendChild(joinButton);
+                        userRoomList.appendChild(listItem);
+                    });
+                });
+
+            fetch('/get_users')
+                .then(response => response.json())
+                .then(users => {
+                    var userList = document.getElementById('userList');
+                    users.forEach(user => {
+                        var listItem = document.createElement('li');
+                        listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+                        listItem.textContent = user.username;
+
+                        var chatButton = document.createElement('button');
+                        chatButton.className = 'btn btn-primary btn-sm';
+                        chatButton.textContent = 'Chat';
+                        chatButton.onclick = function() {
+                            fetch('/initiate_chat/' + user.username, {
+                                method: 'POST'
+                            }).then(() => {
+                                window.location.href = '/chat?room=' + '{{ username }}' + '_' + user.username;
+                            });
+                        };
+
+                        listItem.appendChild(chatButton);
+                        userList.appendChild(listItem);
+                    });
+                });
         });
     </script>
     <style>
@@ -77,11 +123,31 @@
         </div>
         <div class="card">
             <div class="card-header">
-                <h2>Available Rooms</h2>
+                <h2>Global Rooms</h2>
             </div>
             <div class="card-body">
                 <ul id="roomList" class="list-group">
                     <!-- Room items will be inserted here by JavaScript -->
+                </ul>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h2>Your Rooms</h2>
+            </div>
+            <div class="card-body">
+                <ul id="userRoomList" class="list-group">
+                    <!-- User Room items will be inserted here by JavaScript -->
+                </ul>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h2>Available Users</h2>
+            </div>
+            <div class="card-body">
+                <ul id="userList" class="list-group">
+                    <!-- User items will be inserted here by JavaScript -->
                 </ul>
             </div>
         </div>
