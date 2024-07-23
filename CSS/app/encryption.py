@@ -41,10 +41,7 @@ def encrypt_message(public_key_pem, message):
             urlsafe_b64encode(encryptor.tag).decode('utf-8'))
 
 def decrypt_message(private_key_pem, encrypted_session_key, encrypted_message, tag):
-    private_key = serialization.load_pem_private_key(
-        private_key_pem.encode('utf-8'),
-        password=None
-    )
+    private_key = serialization.load_pem_private_key(private_key_pem.encode('utf-8'), password=None)
     session_key = private_key.decrypt(
         urlsafe_b64decode(encrypted_session_key),
         padding.OAEP(
@@ -53,10 +50,7 @@ def decrypt_message(private_key_pem, encrypted_session_key, encrypted_message, t
             label=None
         )
     )
-    cipher = Cipher(
-        algorithms.AES(session_key),
-        modes.GCM(os.urandom(12), urlsafe_b64decode(tag))
-    )
+    cipher = Cipher(algorithms.AES(session_key), modes.GCM(os.urandom(12), urlsafe_b64decode(tag)))
     decryptor = cipher.decryptor()
     decrypted_message = decryptor.update(urlsafe_b64decode(encrypted_message)) + decryptor.finalize()
     return decrypted_message.decode('utf-8')

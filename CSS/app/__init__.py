@@ -19,8 +19,7 @@ def create_default_admin():
     admin_password = '1234'
 
     if not User.get_user(admin_username):
-        hashed_password = generate_password_hash(admin_password, method='pbkdf2:sha256')
-        User.create_user(admin_username, admin_email, hashed_password, is_admin=True)
+        User.create_user(admin_username, admin_email, admin_password, is_admin=True)
         print("Default admin user created.")
     else:
         print("Admin user already exists.")

@@ -8,8 +8,35 @@
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
+            // Store private key in sessionStorage
+            var privateKey = "{{ private_key }}";  // You should pass the private key from the server
+            if (privateKey) {
+                sessionStorage.setItem('private_key', privateKey);
+                console.log('Private Key saved to session storage');
+            }
+
+            // Fetch and store the public key of the other user in localStorage
+            function fetchAndStorePublicKey(room) {
+                fetch(`/get_keys/${room}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.public_key) {
+                            // Store the public key in localStorage
+                            localStorage.setItem('public_key', data.public_key);
+                            console.log('Public Key saved to local storage');
+                        } else {
+                            console.error('Failed to get public key:', data.error);
+                        }
+                    });
+            }
+
+            const room = new URLSearchParams(window.location.search).get('room');
+            if (room) {
+                fetchAndStorePublicKey(room);
+            }
+
+            // Set up socket connection
             var socket = io.connect('http://' + document.domain + ':' + location.port);
-            var room = new URLSearchParams(window.location.search).get('room');
 
             socket.on('connect', function() {
                 socket.emit('join', {username: "{{ username }}", room: room});
@@ -52,12 +79,16 @@
         });
     </script>
     <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
         #chat-container {
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 460px); /* Adjusted for header and footer */
+            height: calc(100vh - 160px); /* Adjusted for header and footer */
             max-width: 800px;
-            margin: auto;
+            margin: 20px auto;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -80,11 +111,23 @@
 
         #message {
             flex: 1;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .input-group-append .btn {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
         }
 
         .container {
             padding-top: 20px;
             padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
         }
     </style>
 </head>
