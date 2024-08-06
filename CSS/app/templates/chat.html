@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SecureChat - Chat</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Store private key in sessionStorage
+            var privateKey = "{{ private_key }}";  // You should pass the private key from the server
+            if (privateKey) {
+                sessionStorage.setItem('private_key', privateKey);
+                console.log('Private Key saved to session storage');
+            }
+
+            // Fetch and store the public key of the other user in localStorage
+            function fetchAndStorePublicKey(room) {
+                fetch(`/get_keys/${room}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.public_key) {
+                            // Store the public key in localStorage
+                            localStorage.setItem('public_key', data.public_key);
+                            console.log('Public Key saved to local storage');
+                        } else {
+                            console.error('Failed to get public key:', data.error);
+                        }
+                    });
+            }
+
+            const room = new URLSearchParams(window.location.search).get('room');
+            if (room) {
+                fetchAndStorePublicKey(room);
+            }
+
+            // Set up socket connection
+            var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+            socket.on('connect', function() {
+                socket.emit('join', {username: "{{ username }}", room: room});
+            });
+
+            socket.on('status', function(data) {
+                var messageList = document.getElementById('messages');
+                var statusItem = document.createElement('li');
+                statusItem.className = 'list-group-item list-group-item-info';
+                statusItem.textContent = data.msg;
+                messageList.appendChild(statusItem);
+            });
+
+            socket.on('message', function(data) {
+                var messageList = document.getElementById('messages');
+                var messageItem = document.createElement('li');
+                messageItem.className = 'list-group-item';
+                messageItem.innerHTML = '<strong>' + data.username + ':</strong> ' + data.msg;
+                messageList.appendChild(messageItem);
+            });
+
+            function sendMessage() {
+                var message = document.getElementById('message').value;
+                socket.emit('message', {
+                    username: "{{ username }}",
+                    msg: message,
+                    room: room
+                });
+                document.getElementById('message').value = '';
+            }
+
+            document.getElementById('sendButton').onclick = sendMessage;
+
+            document.getElementById('message').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
+        });
+    </script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        #chat-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 160px); /* Adjusted for header and footer */
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #f1f1f1;
+        }
+
+        #input-container {
+            display: flex;
+        }
+
+        #message {
+            flex: 1;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .input-group-append .btn {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .container {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    {% include 'includes/navbar.html' %}
+    <div class="container mt-5" id="chat-container">
+        <h1>SecureChat Room: {{ room }}</h1>
+        <ul id="messages" class="list-group"></ul>
+        <div id="input-container" class="input-group">
+            <input type="text" id="message" class="form-control" placeholder="Enter your message">
+            <div class="input-group-append">
+                <button id="sendButton" class="btn btn-primary">Send</button>
+            </div>
+        </div>
+    </div>
+    {% include 'includes/footer.html' %}
+</body>
+</html>
